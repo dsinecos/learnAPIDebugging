@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var axios = require('axios');
 
 /* GET users listing. */
 router.get('/', function (req, res, next) {
@@ -24,7 +25,15 @@ router.get('/:id', function (req, res) {
 
   const actor = actors.filter(actor => actor.id == req.params.id)
 
-  res.send(actor)
+  axios.get('https://api.github.com/users/' + actor[0].name)
+    .then(githubProfile => {
+      res.send(githubProfile.data)
+    })
+    .catch(error => {
+      res.send(error)
+    })
+
+  // res.send(actor)
 })
 
 module.exports = router;
